@@ -8,11 +8,18 @@
 &lt;li&gt;&lt;strong&gt;可组合性&lt;/strong&gt;：能有效表达位置间的相对关系。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="可能的编码方式"&gt;可能的编码方式&lt;/h3&gt;
-&lt;p&gt;其实，根据上面的条件，很容易想到的一个方案就是二进制编码。
-位置编码的根本目的是为序列中的每个token引入位置信息，否则自注意力机制对序列是「无序」的。一个好的位置编码方法需要满足以下条件：&lt;/p&gt;
+&lt;p&gt;其实，根据上面的条件，很容易想到的一个方案就是二进制编码。显而易见，二进制编码一定是唯一的。但是不具有可区分性，泛化性和可组合性。以可区分性为例，相近位置的二进制编码对应的距离不一定近，距离较远的二进制编码对应的距离不一定远。&lt;/p&gt;
+&lt;p&gt;二进制编码的另一问题是，其表示是无界的。为了得到一个有界、连续且能够表达位置间的相对关系，正余弦编码是一个很好的选择。&lt;/p&gt;
+&lt;h3 id="绝对位置编码"&gt;绝对位置编码&lt;/h3&gt;
+&lt;p&gt;$$PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$&lt;/p&gt;
+&lt;p&gt;$$PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$&lt;/p&gt;
+&lt;p&gt;$PE(pos) = [\sin(\omega_0 \cdot pos), \cos(\omega_0 \cdot pos), \sin(\omega_1 \cdot pos), \cos(\omega_1 \cdot pos), \dots, \sin(\omega_{d_{model}/2-1} \cdot pos), \cos(\omega_{d_{model}/2-1} \cdot pos)]$&lt;/p&gt;
+&lt;p&gt;其中，每个维度对的角频率 $\omega_i$ 的定义为：&lt;/p&gt;
+&lt;p&gt;$\omega_i = \frac{1}{10000^{2i/d_{model}}}$&lt;/p&gt;
+&lt;p&gt;这个行向量清晰地展示了位置编码的结构：&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;唯一性&lt;/strong&gt;：每个位置有唯一表示，避免不同位置混淆。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;可区分性&lt;/strong&gt;：相邻位置编码差异明显，模型能感知局部顺序。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;泛化性&lt;/strong&gt;：能处理比训练时更长的序列。&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;可组合性&lt;/strong&gt;：能有效表达位置间的相对关系。&lt;/li&gt;
-&lt;/ul&gt;</description></item></channel></rss>
+&lt;li&gt;&lt;strong&gt;偶数索引的维度&lt;/strong&gt; 使用 $\sin(\cdot)$ 函数。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;奇数索引的维度&lt;/strong&gt; 使用 $\cos(\cdot)$ 函数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;每一对 $\sin(\cdot)$ 和 $\cos(\cdot)$ 函数都共享一个独特的、随着维度 $i$ 的增加而&lt;strong&gt;逐渐减小&lt;/strong&gt;的频率，从而为序列中的每个位置提供了独一无二的编码。&lt;/p&gt;
+&lt;p&gt;首先，需要考虑频率问题，高频在前还是低频在前。高频代表的是主要负责区分相邻词元的位置（高频变化快）。低频 主要负责区分全局位置（低频变化慢）&lt;/p&gt;</description></item></channel></rss>
