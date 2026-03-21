@@ -15,15 +15,13 @@
 &lt;p&gt;在二进制编码中，位置差必须依赖模型学会“二进制到整数”的解码，再做减法。例如 0101 (5) 和 1000 (8)，模型需要先恢复数值才能得出差=3。&lt;/p&gt;
 &lt;h4 id="二进制编码的泛化性"&gt;二进制编码的泛化性&lt;/h4&gt;
 &lt;p&gt;训练时序列的最长长度为$L$，那把位置 $pos$ 转成二进制串所需的比特数为：
+&lt;/p&gt;
 $$
 \lceil \log_2(L) \rceil
-$$&lt;/p&gt;
-&lt;p&gt;比如，训练时最大序列长度为 256，那么会使用8位二进制。在测试时，假设位置 $=300$：&lt;/p&gt;
+$$&lt;p&gt;比如，训练时最大序列长度为 256，那么会使用8位二进制。在测试时，假设位置 $=300$：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;300 的二进制是 $100101100$，需要 9 位。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;但训练时 embedding 只有 8 维（每一位有一个 embedding），此时二进制编码体系不够用了。在训练长度之外会直接“溢出”，不能自然推广。&lt;/p&gt;
 &lt;h3 id="绝对位置编码"&gt;绝对位置编码&lt;/h3&gt;
-&lt;p&gt;$$PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$&lt;/p&gt;
-&lt;p&gt;$$PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$&lt;/p&gt;
-&lt;p&gt;$PE(pos) = [\sin(\omega_0 \cdot pos), \cos(\omega_0 \cdot pos), \sin(\omega_1 \cdot pos), \cos(\omega_1 \cdot pos), \dots, \sin(\omega_{d_{model}/2-1} \cdot pos), \cos(\omega_{d_{model}/2-1} \cdot pos)]$&lt;/p&gt;</description></item></channel></rss>
+$$PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$$$PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$&lt;p&gt;$PE(pos) = [\sin(\omega_0 \cdot pos), \cos(\omega_0 \cdot pos), \sin(\omega_1 \cdot pos), \cos(\omega_1 \cdot pos), \dots, \sin(\omega_{d_{model}/2-1} \cdot pos), \cos(\omega_{d_{model}/2-1} \cdot pos)]$&lt;/p&gt;</description></item></channel></rss>
